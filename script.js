@@ -27,9 +27,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			}
 		};
 
-
-		
-
 		// console.log(subtitles);
 		// console.log(chapters);
 
@@ -73,16 +70,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				var myData = document.querySelector('\[data-start="' + chapters[c].startTime + '"]');
 				if (video.currentTime >= chapters[c].startTime && video.currentTime <= chapters[c].endTime && myData.className.split(' ').indexOf("selected") === -1) {
 					// console.log('current');
-					myData.className += ' selected';
-					if (c !== 0) {
-						myData.previousSibling.classList.remove('selected');
+					
+					var previousSelected = document.querySelectorAll('.selected');
+
+					for (var p = 0; p < previousSelected.length; p++) {
+						console.log(previousSelected[p]);
+						previousSelected[p].classList.remove('selected');
 					};
+					myData.className += ' selected';
 					break;
 				};
 			};
 		};
 	});
 
+	var canvas = document.getElementById('canvasSlide');
+	var context = canvas.getContext('2d');
+
+	PDFJS.getDocument('cahier_des_charges.pdf').then(function (pdf) {
+		pdf.getPage(1).then(function (page) {
+
+			var viewport = page.getViewport(1);
+			viewport.height = canvas.height;
+			viewport.width = canvas.width;
+
+			var renderContext = {
+				canvasContext: context,
+				viewport: viewport
+			};
+
+			// console.log(page);
+			page.render(renderContext);
+		})
+	});
 
 	document.getElementById('subtitles').addEventListener('change', function(e) {
 		toggleSub(e.target.options[e.target['selectedIndex']].value);

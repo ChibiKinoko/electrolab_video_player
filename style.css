@@ -53,6 +53,7 @@ table {
     flex: 1;
     align-items: center;
     margin: 20px;
+    flex-wrap: wrap;
 }
 
 li[data-start]{
@@ -67,6 +68,10 @@ li[data-start]{
     border: 1px black solid;
 }
 
+#videoPlayer, #chapters, #slide, #previews {
+    flex-basis: 50vw;
+}
+
 #videoPlayer { 
     margin-right: 1em;
 }
@@ -74,16 +79,31 @@ li[data-start]{
 #chapters {
     border: 1px solid black;
     border-radius: 10px;
-    padding: 20px;
+    padding: 40px;
+    margin-right: 1em;
+}
+
+#slide, #previews {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 40px;
+}
+
+#slide {
+    flex: 1;
+}
+
+#previews {
+    flex-basis: auto;
+}
+
+.selected {
+    color: red;
 }
 
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
     }
-}
-
-.selected {
-    color: red;
 }
 
