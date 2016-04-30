@@ -101,6 +101,9 @@ li[data-start]{
     color: red;
 }
 
+video {
+    width: 100%;
+}
 @media (max-width: 900px) {
     .container {
         flex-direction: column;
