@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	var subtitles = [];
 	var timestamp;
 	var currentPdfPage = 1;
-	var alwaysDisplay = false;
 
 	/*
 	*
@@ -70,16 +69,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			for (i = 0; i < chapters.length; i++) {
 				var chapterElem = document.createElement("li");
 				chapterElem.innerHTML = ' - ' + chapters[i].id;
+				chapterElem.setAttribute('data-id', i+1);
 				chapterElem.setAttribute('data-start', chapters[i].startTime);
 				chapterElem.setAttribute('data-end', chapters[i].endTime);
 				chaptersList.appendChild(chapterElem);
 
-				chapterElem.addEventListener('click', function () {
+				chapterElem.onclick = function (e) {
 					video.currentTime = this.dataset.start;
+					// console.log(this.dataset.id);
+					// displayPdf(this.dataset.id);
+					console.log(e.target.dataset.id);
+					/*if (e.target.dataset.id == 1) {
+						console.log('i pass');
+						currentPdfPage = 0;
+					}*/
 	  				if(video.paused) { 
 	  					video.play();
 	  				}
-				})
+				};
 			}
 	}
 
@@ -138,17 +145,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	}
 
-	function synchronise(timestamp) {
-		// console.log(timestamp);
+	function synchronisePdfViaVideo(timestamp) {
 
 		for(index in timestamp) {
-			// console.log(timestamp[index].end);
 			if (convert(video.currentTime) > timestamp[index].start && convert(video.currentTime) < timestamp[index].end) {
 				// console.log(typeof parseInt(index, 10));
-				if (parseInt(index, 10) !== currentPdfPage || !alwaysDisplay) {
-					alwaysDisplay = true;
+				if (parseInt(index, 10) !== currentPdfPage) {
 					currentPdfPage = parseInt(index, 10);
+
 					displayPdf(parseInt(index, 10));
+					
 				}
 			};
 			// console.log(video.currentTime);
@@ -224,17 +230,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 							// console.log(previousSelected[p]);
 							previousSelected[p].classList.remove('selected');
 						};
-						myData.className += ' selected';
+						myData.classList.add('selected');
 						break;
 		
 					};
 				};
 
-
 				if (timestamp !== null) {
-					synchronise(timestamp);
+					console.log('je suis la');
+					synchronisePdfViaVideo(timestamp);
 				};
 			};
+		});
+
+		document.getElementById('previous').addEventListener('click', function () {
+			console.log('previous');
 		});
 	}
 	
