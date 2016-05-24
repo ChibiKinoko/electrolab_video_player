@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Title 3</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+    <script src="https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.js"></script>
+    <!-- or -->
+    <script src="https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="style2.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="header">
+            <h1>Video Player</h1>
+        </div>
+        <div class="container">
+
+            <div id="videoPlayer">
+                <video id="videoSample" class="videoSample"
+                    controls preload="auto" width="640" height="464">
+                    <source src="videos/SampleVideo.mp4" type="video/mp4" />
+                    <p>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                    <track src="videos/SampleVideo.vtt" kind="chapters" srclang="en" label="English" default />
+                    <track src="videos/SampleVideo_FR.vtt" kind="subtitles" srclang="fr" label="French" id="default" default/>
+                    <track src="videos/SampleVideo_EN.vtt" kind="subtitles" srclang="en" label="English"/>
+                </video>
+
+                <select id="subtitles"></select>
+            </div>
+
+            <section id="slide">
+                <canvas id="canvasSlide"></canvas>
+            </section>
+
+            <section id="chapters">
+                <header>Chapitres :</header>
+            </section>
+
+            <section id="previews">
+                <p>Preview 1</p>
+                <p>Preview 1</p>
+                <p>Preview 1</p>
+                <p>Preview 1</p>
+            </section>
+        </div>
+
+        <div class="footer">
+            <sub>@Product of ElectroLab</sub>
+        </div>
+    </div>
+
+</body>
+</html>
