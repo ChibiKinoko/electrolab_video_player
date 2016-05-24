@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	var video = document.getElementById("videoSample");
 	var subtitles = [];
+	var chapters = [];
 	var timestamp;
 	var currentPdfPage = 1;
 
@@ -61,28 +62,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	* Get Chapters and display in DOM
 	* 
 	 */	
-	function displayChapters(chapters)
+	function displayChapters(chaptersTable)
 	{
 		var chaptersList = document.createElement("ul");
 			document.getElementById('chapters').appendChild(chaptersList);
 
-			for (i = 0; i < chapters.length; i++) {
+			for (i = 0; i < chaptersTable.length; i++) {
 				var chapterElem = document.createElement("li");
-				chapterElem.innerHTML = ' - ' + chapters[i].id;
+				chapterElem.innerHTML = ' - ' + chaptersTable[i].id;
 				chapterElem.setAttribute('data-id', i+1);
-				chapterElem.setAttribute('data-start', chapters[i].startTime);
-				chapterElem.setAttribute('data-end', chapters[i].endTime);
+				chapterElem.setAttribute('data-start', chaptersTable[i].startTime);
+				chapterElem.setAttribute('data-end', chaptersTable[i].endTime);
 				chaptersList.appendChild(chapterElem);
 
 				chapterElem.onclick = function (e) {
 					video.currentTime = this.dataset.start;
 					// console.log(this.dataset.id);
 					// displayPdf(this.dataset.id);
-					console.log(e.target.dataset.id);
-					/*if (e.target.dataset.id == 1) {
-						console.log('i pass');
-						currentPdfPage = 0;
-					}*/
+					
 	  				if(video.paused) { 
 	  					video.play();
 	  				}
@@ -95,15 +92,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	* Get subtitles and diplay in DOM select
 	*
 	 */
-	function displaySubtitle(subtitles)
+	function displaySubtitle(subtitlesTable)
 	{
-		for (var j = 0; j < subtitles.length; j++) {
+		for (var j = 0; j < subtitlesTable.length; j++) {
 			var optSRT = document.createElement("option");
-			optSRT.innerHTML = subtitles[j].language;
+			optSRT.innerHTML = subtitlesTable[j].language;
 
-			// console.log(subtitles[j].id); 
+			// console.log(subtitlesTable[j].id); 
 
-			if (subtitles[j].id !== "default") {
+			if (subtitlesTable[j].id !== "default") {
 				optSRT.setAttribute('data-show', 'hidden');
 			} else {
 				optSRT.setAttribute('data-show', 'showing');
@@ -145,9 +142,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 		});
 	}
 
-	function synchronisePdfViaVideo(timestamp) {
-
-		for(index in timestamp) {
+	function synchronisePdfViaVideo(timestamp) 
+	{
+		for (index in timestamp) {
 			if (convert(video.currentTime) > timestamp[index].start && convert(video.currentTime) < timestamp[index].end) {
 				// console.log(typeof parseInt(index, 10));
 				if (parseInt(index, 10) !== currentPdfPage) {
@@ -160,6 +157,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			// console.log(video.currentTime);
 		}
 		// console.log(convert(video.currentTime));
+	}
+
+	function synchroniseVideoViaPdf(timestamp, page)
+	{
+		// console.log(timestamp, page);
+		for (pageIndex in timestamp) {
+
+
+			if (pageIndex == page) {
+				time = timestamp[pageIndex].start.split(':');
+
+				var changeVideoTime = 0;
+
+				if (time[0] !== "00") {
+					changeVideoTime += parseInt(time[0]) * 3600;
+				}
+				if (time[1] !== "00") {
+					changeVideoTime += parseInt(time[1]) * 60;
+				}
+				if (time[2] !== "00") {
+					changeVideoTime += parseInt(time[2]);
+				}
+				
+				video.currentTime = changeVideoTime;
+
+			};
+		}
 	}
 
 	function main(timestamp) {
@@ -191,23 +215,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				toggleSub(e.target.options[e.target['selectedIndex']].value);
 			});
 
+
 			// separate chapters from subtitle because it's both tracks html element
 			for (var a = 0; a < video.textTracks.length; a++) {
 				if (video.textTracks[a].kind === 'subtitles') {
 					subtitles.push(video.textTracks[a]);
 				} else {
-					var chapters = video.textTracks[a].cues;
+					chapters = video.textTracks[a].cues;
 				}
 			};
 
-			// console.log(subtitles);
-			// console.log(chapters);
 
 			displayChapters(chapters);
 			
 			displaySubtitle(subtitles);
 
-			displayPdf(currentPdfPage);
+			displayPdf(currentPdfPage); //display the first page of pdf
 
 
 			/**
@@ -216,9 +239,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 			 * 			 
 			*/
 			video.ontimeupdate = function (e) {
-				
-				// console.log(Math.round(video.currentTime));
 
+				// console.log(Math.round(video.currentTime));
 				for (var c = 0; c < chapters.length; c++) {
 					var myData = document.querySelector('\[data-start="' + chapters[c].startTime + '"]');
 					if (video.currentTime >= chapters[c].startTime && video.currentTime <= chapters[c].endTime && myData.className.split(' ').indexOf("selected") === -1) {
@@ -237,18 +259,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				};
 
 				if (timestamp !== null) {
-					console.log('je suis la');
 					synchronisePdfViaVideo(timestamp);
 				};
 			};
 		});
 
 		document.getElementById('previous').addEventListener('click', function () {
-			console.log('previous');
+
+			if (currentPdfPage > 1) {
+				synchroniseVideoViaPdf(timestamp, currentPdfPage - 1);
+			};
+
+		});
+
+		document.getElementById('next').addEventListener('click', function () {
+
+			if (currentPdfPage < chapters.length) {
+				synchroniseVideoViaPdf(timestamp, parseInt(currentPdfPage) + parseInt(1));	
+			};
 		});
 	}
 	
 
 	init();
 
-});
+}); 
