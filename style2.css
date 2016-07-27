@@ -1,8 +1,17 @@
-.grid-item {
-  float: left;
-  width: 100px;
-  height: 100px;
-  background: #0D8;
-  border: 2px solid #333;
-  border-color: hsla(0, 0%, 0%, 0.7);
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: columns;
+}
+
+.container-header, .container-footer {
+    border: 1px solid black;
+    display: flex;
+}
+
+#canvasSlide {
+    min-height: 100%;
 }
