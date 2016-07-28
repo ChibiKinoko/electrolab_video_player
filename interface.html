@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Interface de parsing</title>
+
+    <style type="text/css">
+        textarea { width: 500px; height: 500px}
+    </style>
+</head>
+<body>
+
+    <form action="upload.php" method="post" enctype="multipart/form-data" id="fileUpload" name="fileUpload">
+        <label>Select File</label>
+        <input type="file" name="fileToUpload" id="fileToUpload">
+        <input type="submit" value="Send" name="submit">
+    </form>
+
+    <p class="error"></p>
+
+    <div class="videoPlayer"></div>
+
+    <div class="chapters"></div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>  
+
+    <script type="text/javascript">
+
+        var videoDiv = document.querySelector('.videoPlayer');
+
+        function convert(time)
+        {
+            var seconds = Math.round(time);
+            var hours = parseInt( seconds / 3600 );
+            var minutes = parseInt( seconds / 60 );
+
+            var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
+            return result;
+        }
+
+        document.getElementById('fileUpload').onsubmit = function(event) {
+            event.preventDefault();
+
+            var form = new FormData(document.getElementById('fileUpload'));
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                    var res = JSON.parse(xhr.responseText);
+
+                    document.querySelector('.error').innerText = res.status + ": " + res.msg;
+
+                    if (res.status == "success") {
+
+                        // PLAYER
+                        var newItem = document.createElement("video");
+                        newItem.setAttribute('class', 'videoSample');
+                        newItem.setAttribute('controls', '');
+                        newItem.setAttribute('preload', 'auto');
+                        newItem.setAttribute('width', '640');
+                        newItem.setAttribute('height', '464');
+
+                        var newSource = document.createElement("source");
+                        newSource.setAttribute('src', res.src);
+                        newSource.setAttribute('type', 'video/mp4');
+
+                        var buttonAdd = document.createElement("button");
+                        buttonAdd.setAttribute('class', 'buttonAdd')
+                        buttonAdd.innerText = "Add";
+
+                        document.querySelector('.videoPlayer').appendChild(newItem);
+                        document.querySelector('.videoSample').appendChild(newSource);
+                        document.querySelector('.videoSample').parentNode.appendChild(buttonAdd);
+
+
+                        // CHAPTERS
+                        document.querySelector('.chapters').style.border = "1px solid black";
+                        var list = document.createElement('ul');
+
+                        var buttonClear = document.createElement("button");
+                        buttonClear.setAttribute('class', 'buttonClear')
+                        buttonClear.innerText = "Clear All";
+
+                        var buttonSave = document.createElement("button");
+                        buttonSave.setAttribute('class', 'buttonSave')
+                        buttonSave.innerText = "Save File";
+
+                        document.querySelector('.chapters').appendChild(list);
+                        document.querySelector('.chapters').appendChild(buttonClear);
+                        document.querySelector('.chapters').appendChild(buttonSave);
+
+                        createTimestamp(list);
+
+                    } else {
+                        console.log('error');
+                        videoDiv.innerHTML = "";
+                    }
+                }
+            };
+    
+            xhr.open("POST", "upload.php");
+            xhr.send(form);
+        };
+
+        function createTimestamp(list) {
+            var player = videoDiv.querySelector('.videoSample');
+            
+            var videoEnd = false;
+            var compteur = 1;
+            var start = "00:00:00";
+
+            document.querySelector('.buttonAdd').addEventListener('click', function () {
+                // console.log(convert(player.currentTime));
+                if (!videoEnd) {
+                    var chapter = document.createElement("li");
+                    chapter.appendChild(document.createTextNode(start + " --> " + convert(player.currentTime)));
+
+                    list.appendChild(chapter);
+
+                    start = convert(player.currentTime);
+                    compteur++;
+                };
+            });
+            
+            player.addEventListener('ended', function () {
+                videoEnd = true;
+            });
+        }       
+
+    </script>
+
+</body>
+</html>

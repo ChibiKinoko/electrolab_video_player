@@ -338,6 +338,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 				displayPdf(currentPdfPage);
 			};
 		});
+
+		video.addEventListener('pause', function() {
+			console.log('toto');
+		});
 	}
 	
 
