@@ -1,13 +1,11 @@
 <?php
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$types = array('video/mp4');
 
-$uploadOk = 1;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+// if it's form request
+if (isset($_POST["submit"])) {
+    $target_dir = "uploads/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $types = array('video/mp4');
 
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
     $fileType = $_FILES["fileToUpload"]["type"];
 
 
@@ -23,30 +21,30 @@ if(isset($_POST["submit"])) {
         echo json_encode(array('status' => 'error', 'msg' => 'not a mp4 file'));        
     }
 
+} else {
+    $times = json_decode($_POST['data']);
+
+    $tmpJson = [];
+
+    // first parse for sort by key
+    foreach ($times as $one) {
+        $tmpJson[$one->start] = $one->end;
+    }
+
+    ksort($tmpJson);
+
+    // second sort for parse in json
+    $newJson = [];
+    $compt = 1;
+    foreach ($tmpJson as $key => $value) {
+        $newJson[$compt] = array('start' => $key, 'end' => $value);
+        $compt++;
+    }
+
+    $fp = fopen('results.json', 'w');
+    fwrite($fp, json_encode($newJson));
+    fclose($fp);
+ 
+    echo 'results.json';        
+
 }
-
-// function parse($file)   
-// {
-
-//     $arr = file($file, FILE_SKIP_EMPTY_LINES | FILE_IGNORE_NEW_LINES);
-//     $arr = array_splice($arr, 1);
-
-//     $newFile = [];
-
-//     for ($i = 0; $i < count($arr); $i++) {
-//         // var_dump($arr[$i % 3]);
-//         if (preg_match('/^[a-zA-Z _\-.]{1,}/', $arr[$i]) == 1) {
-
-//             $timestamp = explode('--> ', $arr[$i + 1]);
-//             $start = trim(substr($timestamp[0], 0, 8));
-//             $end = trim(substr($timestamp[1], 0, 8));
-
-
-//             $newFile[$i + 1] = array('start' => $start, 'end' => $end);
-//         } else {    
-//             // echo "timestamp\n";
-//         }
-//     }
-//     var_dump(json_encode($newFile));
-//     // print_r($arr);
-// }
