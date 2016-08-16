@@ -1,59 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>ElectroLab VideoPlayer</title>
-
     <link href="http://vjs.zencdn.net/5.9.2/video-js.css" rel="stylesheet">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-
     <!-- If you'd like to support IE8 -->
     <script src="http://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
     <script type="text/javascript" src="lib/PDFjs/build/pdf.js"></script>
-    <script type="text/javascript" src="script.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style2.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/normalizecss.css"> -->
 </head>
-<body>
 
+<body>
     <div class="wrapper">
         <div class="header">
-
-            <h1>Video Player</h1>
+            <h1><span>ElectroLab::</span>Video Player</h1>
         </div>
         <div class="container" id="container">
+            <div>
+                <div id="videoPlayer">
+                    <video id="videoSample" class="videoSample" controls preload="auto" width="640" height="464">
+                        <source src="videos/SampleVideo.mp4" type="video/mp4" />
+                        <p>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                        <track src="videos/SampleVideo.vtt" kind="chapters" srclang="en" label="English" default />
+                        <track src="videos/SampleVideo_FR.vtt" kind="subtitles" srclang="fr" label="French" id="default" default/>
+                        <track src="videos/SampleVideo_EN.vtt" kind="subtitles" srclang="en" label="English" />
+                    </video>
+                    <p>Subtitles :</p>
+                    <select id="subtitles"></select>
+                </div>
 
-            <div id="videoPlayer">
-                <video id="videoSample" class="videoSample"
-                controls preload="auto" width="640" height="464">
-                <source src="videos/SampleVideo.mp4" type="video/mp4" />
-                <p>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-                <track src="videos/SampleVideo.vtt" kind="chapters" srclang="en" label="English" default />
-                <track src="videos/SampleVideo_FR.vtt" kind="subtitles" srclang="fr" label="French" id="default" default/>
-                <track src="videos/SampleVideo_EN.vtt" kind="subtitles" srclang="en" label="English"/>
-            </video>
+            <section id="chapters">
+                <header>Chapitres :</header>
+                </section>
 
-            <select id="subtitles"></select>
-        </div>
-
-        <section id="slide">
-        <canvas id="canvasSlide"></canvas>
-        <button id="previous">Previous</button>
-        <button id="next">Next</button>
-        </section>
-
-        <section id="chapters">
-            <header>Chapitres :</header>
-        </section>
-
-        <section id="previews">
-        </section>
+            </div>
+                <section id="slide">
+                    <canvas id="canvasSlide" width="655" height="800"></canvas>
+                    <br/>
+                    <button id="previous">Previous</button>
+                    <button id="next">Next</button>
+                </section>
 
         </div>
-
         <div class="footer">
-            <sub>@Product of ElectroLab</sub>
+            <sub>Product of ElectroLab @ 2016</sub>
         </div>
     </div>
 </body>
+
 </html>

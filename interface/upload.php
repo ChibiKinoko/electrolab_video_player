@@ -2,7 +2,7 @@
 
 // if it's form request
 if (isset($_POST["submit"])) {
-    $target_dir = "uploads/";
+    $target_dir = "../uploads/";
     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
     $types = array('video/mp4');
 
@@ -15,7 +15,9 @@ if (isset($_POST["submit"])) {
                 // echo "Le fichier est valide, et a été téléchargé avec succès.";
 
             echo json_encode(array('status' => 'success', 'msg' => 'video upladed', 'src' => $target_file));
-        } 
+        } else {
+            echo json_encode(array('status' => 'error', 'msg' => 'file move'));
+        }
 
     } else {
         echo json_encode(array('status' => 'error', 'msg' => 'not a mp4 file'));        
