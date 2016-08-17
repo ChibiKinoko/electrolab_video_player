@@ -53,8 +53,22 @@ header > h1:before {
     border-radius: 4px;
 }
 
+.error { color: #FF0000 }
+
 .videoPlayer {
     background-color: rgb(59, 26, 84);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.videoPlayer > video {
+    margin-right: 30px;
+}
+
+.videoPlayer > button {
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .chapters {
