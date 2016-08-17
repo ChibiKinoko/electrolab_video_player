@@ -6,7 +6,7 @@ if (isset($_POST["submit"])) {
     $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
     $types = array('video/mp4');
 
-    $fileType = $_FILES["fileToUpload"]["type"];
+        $fileType = $_FILES["fileToUpload"]["type"];
 
 
     if (in_array($fileType, $types)) {
@@ -43,10 +43,9 @@ if (isset($_POST["submit"])) {
         $compt++;
     }
 
-    $fp = fopen('results.json', 'w');
+    $fp = fopen('results.json', 'w', TRUE);
     fwrite($fp, json_encode($newJson));
     fclose($fp);
  
-    echo 'results.json';        
-
+    echo 'results.json';
 }
