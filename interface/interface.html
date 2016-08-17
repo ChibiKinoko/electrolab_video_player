@@ -1,183 +1,190 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Interface de création</title>
-
-    <style type="text/css">
-        textarea { width: 500px; height: 500px}
-    </style>
+    <link rel="stylesheet" type="text/css" href="../css/interface.css">
 </head>
+
 <body>
-
-    <form action="upload.php" method="post" enctype="multipart/form-data" id="fileUpload" name="fileUpload">
-        <label>Select File</label>
-        <input type="file" name="fileToUpload" id="fileToUpload">
-        <input type="submit" value="Send" name="submit">
-    </form>
-
-    <p class="error"></p>
-
-    <div class="videoPlayer"></div>
-
-    <div class="chapters"></div>
-
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>  
-
+    <div class="wrapper">
+        <header>
+            <h1><span>ElectroLab::</span>Interface de création fichier Json</h1></header>
+        <div class="container">
+            <div class="form">
+                <form action="upload.php" method="post" enctype="multipart/form-data" id="fileUpload" name="fileUpload">
+                    <label>Select File</label>
+                    <input type="file" name="fileToUpload" id="fileToUpload">
+                    <input type="submit" value="Send" name="submit">
+                </form>
+                <p class="error"></p>
+            </div>
+            <div class="videoPlayer"></div>
+            <div class="chapters"></div>
+        </div>
+    </div>
+    </div>
     <script type="text/javascript">
+    var xhr = new XMLHttpRequest();
 
-        var xhr = new XMLHttpRequest();
-
-        var videoDiv = document.querySelector('.videoPlayer');
-        var buttonAdd = document.createElement("button");
-        var buttonClear = document.createElement("button");
-        var buttonSave = document.createElement("button");
-
-
-        function convert(time)
-        {
-            var seconds = Math.round(time);
-            var hours = parseInt( seconds / 3600 );
-            var minutes = parseInt( seconds / 60 );
-
-            var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds);
-            return result;
-        }
-
-        document.getElementById('fileUpload').onsubmit = function(event) {
-            event.preventDefault();
-
-            var form = new FormData(document.getElementById('fileUpload'));
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-                    var res = JSON.parse(xhr.responseText);
-                    
-                    // console.log(xhr.responseText);
-
-                    document.querySelector('.error').innerText = res.status + ": " + res.msg;
-
-                    if (res.status == "success") {
-
-                        // PLAYER
-                        var newItem = document.createElement("video");
-                        newItem.setAttribute('class', 'videoSample');
-                        newItem.setAttribute('controls', '');
-                        newItem.setAttribute('preload', 'auto');
-                        newItem.setAttribute('width', '640');
-                        newItem.setAttribute('height', '464');
-
-                        var newSource = document.createElement("source");
-                        newSource.setAttribute('src', res.src);
-                        newSource.setAttribute('type', 'video/mp4');
-
-                        buttonAdd.setAttribute('class', 'buttonAdd')
-                        buttonAdd.innerText = "Add";
-
-                        document.querySelector('.videoPlayer').appendChild(newItem);
-                        document.querySelector('.videoSample').appendChild(newSource);
-                        document.querySelector('.videoSample').parentNode.appendChild(buttonAdd);
+    var videoDiv = document.querySelector('.videoPlayer');
+    var buttonAdd = document.createElement("button");
+    var buttonClear = document.createElement("button");
+    var buttonSave = document.createElement("button");
 
 
-                        // CHAPTERS
-                        document.querySelector('.chapters').style.border = "1px solid black";
-                        var list = document.createElement('ul');
-                        list.setAttribute('class', 'chaptersList');
-                        buttonClear.setAttribute('class', 'buttonClear')
-                        buttonClear.innerText = "Clear All";
+    function convert(time) {
+        var seconds = Math.round(time);
+        var hours = parseInt(seconds / 3600);
+        var minutes = parseInt(seconds / 60);
 
-                        buttonSave.setAttribute('class', 'buttonSave')
-                        buttonSave.innerText = "Save File";
+        var result = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+        return result;
+    }
 
-                        document.querySelector('.chapters').appendChild(list);
-                        document.querySelector('.chapters').appendChild(buttonClear);
-                        document.querySelector('.chapters').appendChild(buttonSave);
+    document.getElementById('fileUpload').onsubmit = function(event) {
+        event.preventDefault();
 
-                        createTimestamp(list);
+        var form = new FormData(document.getElementById('fileUpload'));
 
-                    } else {
-                        // console.log('error');
-                        videoDiv.innerHTML = "";
-                    }
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                var res = JSON.parse(xhr.responseText);
+
+                // console.log(xhr.responseText);
+
+                document.querySelector('.error').innerText = res.status + ": " + res.msg;
+
+                if (res.status == "Success") {
+
+                    // PLAYER
+                    var newItem = document.createElement("video");
+                    newItem.setAttribute('class', 'videoSample');
+                    newItem.setAttribute('controls', '');
+                    newItem.setAttribute('preload', 'auto');
+                    newItem.setAttribute('width', '640');
+                    newItem.setAttribute('height', '464');
+
+                    var newSource = document.createElement("source");
+                    newSource.setAttribute('src', res.src);
+                    newSource.setAttribute('type', 'video/mp4');
+
+                    buttonAdd.setAttribute('class', 'buttonAdd')
+                    buttonAdd.innerText = "Add";
+
+                    document.querySelector('.videoPlayer').appendChild(newItem);
+                    document.querySelector('.videoSample').appendChild(newSource);
+                    document.querySelector('.videoSample').parentNode.appendChild(buttonAdd);
+
+
+                    // CHAPTERS
+                    var list = document.createElement('ul');
+                    list.setAttribute('class', 'chaptersList');
+                    buttonClear.setAttribute('class', 'buttonClear')
+                    buttonClear.innerText = "Clear All";
+
+                    var title = document.createElement('h2');
+                    title.innerText = "Chapters :";
+                    list.appendChild(title);
+
+
+                    buttonSave.setAttribute('class', 'buttonSave')
+                    buttonSave.innerText = "Save File";
+
+                    document.querySelector('.chapters').appendChild(list);
+                    document.querySelector('.chapters').appendChild(buttonClear);
+                    document.querySelector('.chapters').appendChild(buttonSave);
+
+                    createTimestamp(list);
+
+                } else {
+                    // console.log('error');
+                    videoDiv.innerHTML = "";
                 }
-            };
-    
-            xhr.open("POST", "upload.php");
-            xhr.send(form);
-
+            } else {
+                document.querySelector('.error').innerText = "Error : Upload error";
+            }
         };
 
-        function createTimestamp(list)
-        {
-            var player = videoDiv.querySelector('.videoSample');
-            
-            var videoEnd = false;
-            var compteur = 1;
-            var start = "00:00:00";
+        xhr.open("POST", "upload.php");
+        xhr.send(form);
 
-            document.querySelector('.buttonAdd').addEventListener('click', function () {
+    };
 
-                // if (!videoEnd) {
-                    var chapter = document.createElement("li");
-                    chapter.appendChild(document.createTextNode(start + " --> " + convert(player.currentTime)));
+    function createTimestamp(list) {
+        var player = videoDiv.querySelector('.videoSample');
 
-                    list.appendChild(chapter);
+        var videoEnd = false;
+        var compteur = 1;
+        var start = "00:00:00";
 
-                    start = convert(player.currentTime);
-                    compteur++;
-                // };
-            });
-            
-            // player.addEventListener('ended', function () {
-            //     videoEnd = true;
-            // });
-            
-            document.querySelector('.buttonClear').addEventListener('click', function () {
-                document.querySelector('.chaptersList').innerHTML = "";
-            });  
+        document.querySelector('.buttonAdd').addEventListener('click', function() {
 
-            document.querySelector('.buttonSave').addEventListener('click', function () {
-                saveTimestamp(document.getElementsByTagName("li"));
-            });
-        }
+            // if (!videoEnd) {
+            var chapter = document.createElement("li");
+            chapter.appendChild(document.createTextNode("- " + start + " --> " + convert(player.currentTime)));
 
-        function saveTimestamp(chaptersLi)
-        {
+            list.appendChild(chapter);
 
-            var tmp = [];
+            start = convert(player.currentTime);
+            compteur++;
+            // };
+        });
 
-            for (var i in chaptersLi) {
-                if (chaptersLi[i].innerText !== undefined) {
-                    var timestamp = chaptersLi[i].innerText.split(" --> ");
-                    if (timestamp[0] <= timestamp[1]) {
-                        tmp.push({start: timestamp[0], end: timestamp[1]});
-                    };
+        // player.addEventListener('ended', function () {
+        //     videoEnd = true;
+        // });
+
+        document.querySelector('.buttonClear').addEventListener('click', function() {
+            document.querySelector('.chaptersList').innerHTML = "";
+        });
+
+        document.querySelector('.buttonSave').addEventListener('click', function() {
+            saveTimestamp(document.getElementsByTagName("li"));
+            document.querySelector('.videoSample').parentNode.removeChild(buttonAdd);
+
+
+        });
+    }
+
+    function saveTimestamp(chaptersLi) {
+        var tmp = [];
+
+        for (var i in chaptersLi) {
+            if (chaptersLi[i].innerText !== undefined) {
+                var timestamp = chaptersLi[i].innerText.split(" --> ");
+                if (timestamp[0] <= timestamp[1]) {
+                    tmp.push({
+                        start: timestamp[0],
+                        end: timestamp[1]
+                    });
                 };
-            }
-
-            // console.log(JSON.stringify(tmp));
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-
-                    console.log(xhr.responseText);
-
-                    var buttonSuccess = document.createElement("a");
-                    buttonSuccess.setAttribute('href', xhr.responseText);
-                    buttonSuccess.setAttribute('download', xhr.responseText);
-                    buttonSuccess.innerText = "download here !";
-                    document.querySelector('.chapters').appendChild(buttonSuccess);
-                    document.querySelector('.chapters').removeChild(buttonClear);
-                    document.querySelector('.chapters').removeChild(buttonSave);
-                }
             };
-            
-            xhr.open("POST", "upload.php");
-            //sinon $_POST vide
-            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-            xhr.send("data=" + JSON.stringify(tmp));
         }
 
-    </script>
+        // console.log(JSON.stringify(tmp));
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
 
+                console.log(xhr.responseText);
+
+                var buttonSuccess = document.createElement("a");
+                buttonSuccess.setAttribute('href', xhr.responseText);
+                buttonSuccess.setAttribute('download', xhr.responseText);
+                buttonSuccess.innerText = "download here !";
+                document.querySelector('.chapters').appendChild(buttonSuccess);
+                document.querySelector('.chapters').removeChild(buttonClear);
+                document.querySelector('.chapters').removeChild(buttonSave);
+            }
+        };
+
+        xhr.open("POST", "upload.php");
+        //sinon $_POST vide
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send("data=" + JSON.stringify(tmp));
+    }
+    </script>
 </body>
+
 </html>

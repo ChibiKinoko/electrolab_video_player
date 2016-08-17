@@ -1,0 +1,76 @@
+body {
+    margin: 0;
+    background-image: url('img/headerBKG.jpg'); 
+}
+
+li {
+    list-style-type: none;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+}
+
+header { 
+    flex-basis: 10vh; 
+    text-align: center;
+}
+
+header > h1 {
+    display: inline;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+header > h1 > span {
+    color: #000000;
+    padding: 5px;
+    margin-right: 10px;
+    background-color: #00FFBA;
+}
+
+header > h1:before {
+    content: 'logo';
+    background-image: url('img/logo.png');
+    color: transparent;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.form {
+    background-color: #FFFFFF;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.videoPlayer {
+    background-color: rgb(59, 26, 84);
+}
+
+.chapters {
+    background-color: #FFFFFF;
+    text-align: center;
+    padding: 10px;
+}
+
+.chaptersList {
+    width: 50vw;
+    border: 1px black solid;
+    padding: 10px;
+    margin: 10px auto;
+}
+
+textarea {
+    width: 500px;
+    height: 500px
+}

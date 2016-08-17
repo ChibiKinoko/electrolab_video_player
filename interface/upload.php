@@ -14,13 +14,13 @@ if (isset($_POST["submit"])) {
         if (move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target_file)) {
                 // echo "Le fichier est valide, et a été téléchargé avec succès.";
 
-            echo json_encode(array('status' => 'success', 'msg' => 'video upladed', 'src' => $target_file));
+            echo json_encode(array('status' => 'Success', 'msg' => 'Video upladed', 'src' => $target_file));
         } else {
-            echo json_encode(array('status' => 'error', 'msg' => 'file move'));
+            echo json_encode(array('status' => 'Error', 'msg' => 'File move'));
         }
 
     } else {
-        echo json_encode(array('status' => 'error', 'msg' => 'not a mp4 file'));        
+        echo json_encode(array('status' => 'Error', 'msg' => 'Not a mp4 file'));        
     }
 
 } else {
@@ -44,8 +44,11 @@ if (isset($_POST["submit"])) {
     }
 
     $fp = fopen('results.json', 'w', TRUE);
-    fwrite($fp, json_encode($newJson));
-    fclose($fp);
- 
-    echo 'results.json';
+    if ($fp !== false) {
+
+        fwrite($fp, json_encode($newJson));
+        fclose($fp);
+     
+        echo 'results.json';
+    }
 }
