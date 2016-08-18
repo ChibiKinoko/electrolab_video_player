@@ -71,7 +71,7 @@
                     newSource.setAttribute('type', 'video/mp4');
 
                     buttonAdd.setAttribute('class', 'buttonAdd')
-                    buttonAdd.innerText = "Add";
+                    buttonAdd.innerText = "Add Timestamp";
 
                     document.querySelector('.videoPlayer').appendChild(newItem);
                     document.querySelector('.videoSample').appendChild(newSource);
@@ -85,7 +85,7 @@
                     buttonClear.innerText = "Clear All";
 
                     var title = document.createElement('h2');
-                    title.innerText = "Chapters :";
+                    title.innerText = "Pdf :";
                     list.appendChild(title);
 
 
@@ -116,19 +116,20 @@
         var player = videoDiv.querySelector('.videoSample');
 
         var videoEnd = false;
-        var compteur = 1;
+        // var compteur = 1;
         var start = "00:00:00";
+        var page = 1;
 
         document.querySelector('.buttonAdd').addEventListener('click', function() {
 
             // if (!videoEnd) {
             var chapter = document.createElement("li");
-            chapter.appendChild(document.createTextNode("- " + start + " --> " + convert(player.currentTime)));
+            chapter.appendChild(document.createTextNode("- page " + page++ + " : " + start + " --> " + convert(player.currentTime)));
 
             list.appendChild(chapter);
 
             start = convert(player.currentTime);
-            compteur++;
+            // compteur++;
             // };
         });
 
